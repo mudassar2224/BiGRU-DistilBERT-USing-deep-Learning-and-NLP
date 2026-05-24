@@ -44,20 +44,11 @@ This project builds a **complete extractive summarization system** from scratch 
 
 ## 🖼️ Proof — Model Architecture & Training
 
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <strong>📐 Model Architecture</strong><br><br>
-      <img src="assets/model_architecture.png" alt="Model Architecture" width="100%"/>
-      <br><em>BiGRU + Attention + Dense layers · 900,865 trainable params</em>
-    </td>
-    <td align="center" width="50%">
-      <strong>📈 Training Results (10 Epochs)</strong><br><br>
-      <img src="assets/training_results.png" alt="Training Results" width="100%"/>
-      <br><em>Val accuracy hitting 88.47% by Epoch 2, stable at 87.48% final</em>
-    </td>
-  </tr>
-</table>
+<img width="1357" height="764" alt="image" src="https://github.com/user-attachments/assets/1c845671-6003-48bc-8a44-79f91689de88" />
+
+
+<img width="1359" height="767" alt="image" src="https://github.com/user-attachments/assets/ffd41190-1469-4631-97cf-e48293e57002" />
+
 
 ---
 
