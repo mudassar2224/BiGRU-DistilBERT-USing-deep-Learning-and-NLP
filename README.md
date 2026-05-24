@@ -142,6 +142,8 @@ python app.py
 | Training | `Google Colab T4 GPU` |
 
 ---
+<img width="1360" height="2258" alt="screencapture-huggingface-co-spaces-Maliktg5-GRUDeepLeraningmodel-2026-05-24-17_06_03" src="https://github.com/user-attachments/assets/fc8cc8ac-1866-4579-beac-a1ca1dad465c" />
+
 
 ## ✍️ Author
 
