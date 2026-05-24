@@ -154,10 +154,14 @@ python app.py
 
 ## ✍️ Author
 
-**Malik Taimoor Ghazanfar**  
+**Muhammad Mudassar**  
 Built end-to-end: data collection → labeling → training → deployment
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat&logo=linkedin)](YOUR_LINKEDIN_POST_URL)
+
 [![HuggingFace](https://img.shields.io/badge/🤗-Maliktg5-yellow)](https://huggingface.co/Maliktg5)
+
 [![Colab Notebook](https://img.shields.io/badge/Colab-Training_Notebook-F9AB00?style=flat&logo=googlecolab)](https://colab.research.google.com/drive/1j7eD76UCqm51LafeweFfwSbL7SmHmb2T?usp=sharing)
+
 [![Dataset](https://img.shields.io/badge/Dataset-Google_Drive-4285F4?style=flat&logo=googledrive)](https://drive.google.com/drive/folders/1z0RDMLAN-x9iaMUAE80eTrsCTEQXS9Ac?usp=sharing)
+
