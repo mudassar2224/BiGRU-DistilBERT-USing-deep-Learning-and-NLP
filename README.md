@@ -1,211 +1,161 @@
+<div align="center">
 
+# 🧠 AI Lecture Summarizer
+### BiGRU + DistilBERT · Extractive Summarization · End-to-End Deep Learning
 
+[![Live Demo](https://img.shields.io/badge/🤗_HuggingFace-Live_App-orange?style=for-the-badge)](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel)
+[![Open In Colab](https://img.shields.io/badge/Open_In-Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1j7eD76UCqm51LafeweFfwSbL7SmHmb2T?usp=sharing)
+[![Dataset](https://img.shields.io/badge/Google_Drive-Dataset-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1z0RDMLAN-x9iaMUAE80eTrsCTEQXS9Ac?usp=sharing)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Post-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](YOUR_LINKEDIN_POST_URL)
 
-```markdown
-# 🧠 AI Lecture Summarizer — BiGRU + DistilBERT
+*Paste any lecture transcript → get the most important sentences as a clean bullet-point summary*
 
-> Extractive text summarization using DistilBERT + Bidirectional GRU,
-> trained on 52+ multilingual YouTube lecture transcripts
-> (Urdu, Punjabi, English) — built and deployed end-to-end from scratch.
-
-[![Live Demo](https://img.shields.io/badge/🤗_HuggingFace-Live_App-orange)](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1j7eD76UCqm51LafeweFfwSbL7SmHmb2T?usp=sharing)
-[![Dataset](https://img.shields.io/badge/Google_Drive-Dataset-blue)](https://drive.google.com/drive/folders/1z0RDMLAN-x9iaMUAE80eTrsCTEQXS9Ac?usp=sharing)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Post-0077B5)](YOUR_LINKEDIN_POST_URL)
+</div>
 
 ---
 
 ## 🎯 What This Project Does
 
-Paste any lecture transcript or article → get the most important sentences
-as a clean bullet-point summary.
+This project builds a **complete extractive summarization system** from scratch — no pre-built summarizer, no GPT wrapper. Every sentence in a document is scored by a custom-trained neural network and the top-K most important ones are returned in reading order.
 
 **Works on:**
 - ✅ Normal English articles
 - ✅ YouTube auto-captions (even without punctuation)
-- ✅ Urdu, Punjabi, English mixed transcripts
+- ✅ Urdu · Punjabi · English mixed transcripts
 - ✅ Any text over 30 words
 
-**Try it live → [huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel)**
+> **Try it live → [huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel)**
 
 ---
 
 ## 📊 Results
 
 | Metric | Score |
-|---|---|
-| Training Accuracy | **89.53%** |
-| Validation Accuracy | **87.48%** |
-| Total Sentences Trained | **16,173** |
-| Training Videos | 52+ YouTube lectures |
-| Model Size | 3.44 MB |
-| Languages | Urdu · Punjabi · English |
-| Training Hardware | Google Colab T4 GPU |
+|:---|:---|
+| 🎯 Training Accuracy | **89.53%** |
+| ✅ Validation Accuracy | **87.48%** |
+| 📝 Total Sentences Trained | **16,173** |
+| 🎬 Training Videos | **52+ YouTube lectures** |
+| 💾 Model Size | **3.44 MB** |
+| 🌍 Languages | **Urdu · Punjabi · English** |
+| ⚡ Training Hardware | **Google Colab T4 GPU** |
+
+---
+
+## 🖼️ Proof — Model Architecture & Training
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>📐 Model Architecture</strong><br><br>
+      <img src="assets/model_architecture.png" alt="Model Architecture" width="100%"/>
+      <br><em>BiGRU + Attention + Dense layers · 900,865 trainable params</em>
+    </td>
+    <td align="center" width="50%">
+      <strong>📈 Training Results (10 Epochs)</strong><br><br>
+      <img src="assets/training_results.png" alt="Training Results" width="100%"/>
+      <br><em>Val accuracy hitting 88.47% by Epoch 2, stable at 87.48% final</em>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## 🏗️ Full Pipeline
 
 ```
-📥 YouTube Videos (52+ lectures)
-         ↓
-🎙️ OpenAI Whisper → JSON Transcripts
-         ↓
-✂️ NLTK Sentence Tokenizer
-         ↓
-🏷️ TF-IDF Pseudo-Labeling
-   (Top 20% = Label 1, Rest = Label 0)
-         ↓
-🔀 Feature Fusion per Sentence:
-   DistilBERT CLS Token  →  768 dims
-   +
-   TF-IDF Vector         →  232 dims
-   =
-   Fused Vector          → 1000 dims
-         ↓
-🧠 Bidirectional GRU (128 units × 2)
-         ↓
-🎯 Self-Attention Layer
-         ↓
-📊 GlobalAveragePooling
-         ↓
-💡 Dense(128, ReLU) → Dropout(0.3)
-         ↓
-📈 Dense(1, Sigmoid) → Importance Score
-         ↓
-📋 Top K sentences returned in reading order
+Raw YouTube Videos (52+ lectures)
+        │
+        ▼
+YouTube Transcript API  ──►  Raw transcripts (Urdu/Punjabi/English)
+        │
+        ▼
+Sentence Tokenization  ──►  16,173 individual sentences extracted
+        │
+        ▼
+Label Generation  ──►  TF-IDF cosine similarity → binary important/not labels
+        │
+        ▼
+Feature Extraction (per sentence)
+  ├── DistilBERT CLS embedding  → 768-dim semantic vector
+  └── TF-IDF vector             → 232-dim lexical vector
+        │ concatenate → 1000-dim fused vector
+        ▼
+BiGRU + Attention Model
+  ├── Input:  (batch, 1, 1000)
+  ├── BiGRU:  256 units bidirectional
+  ├── Self-Attention layer
+  ├── GlobalAveragePooling1D
+  ├── Dense(128, relu) + Dropout(0.3)
+  └── Dense(1, sigmoid) → importance score
+        │
+        ▼
+Top-K Sentence Selection  ──►  Clean bullet-point summary
 ```
 
 ---
 
-## 🗂️ Dataset
+## 🧱 Model Architecture Detail
 
-| Property | Details |
-|---|---|
-| Source | YouTube lectures (manually selected) |
-| Videos | 52+ across multiple topics |
-| Topics | OOP · Flutter · ML · Data Structures · CS basics |
-| Languages | Urdu · Punjabi · English (code-switched) |
-| Transcription | OpenAI Whisper |
-| Labeling | Automatic — TF-IDF pseudo-labeling |
-| Sentences | 16,173 labeled sentences |
-| Human annotation | ❌ Not required |
+| Layer | Output Shape | Params | Connected To |
+|:---|:---|---:|:---|
+| `fused_input` (InputLayer) | (None, 1, 1000) | 0 | — |
+| `bi_gru` (Bidirectional) | (None, 1, 256) | 867,840 | fused_input |
+| `self_attention` (Attention) | (None, 1, 256) | 0 | bi_gru |
+| `avg_pool` (GlobalAveragePooling1D) | (None, 256) | 0 | self_attention |
+| `fc1` (Dense, relu) | (None, 128) | 32,896 | avg_pool |
+| `dropout` (Dropout 0.3) | (None, 128) | 0 | fc1 |
+| `importance_score` (Dense, sigmoid) | (None, 1) | 129 | dropout |
 
-📂 **[Download Dataset from Google Drive](https://drive.google.com/drive/folders/1z0RDMLAN-x9iaMUAE80eTrsCTEQXS9Ac?usp=sharing)**
-
----
-
-## 🛠️ Tech Stack
-
-| Component | Tool / Library |
-|---|---|
-| Speech-to-Text | OpenAI Whisper |
-| Semantic Embeddings | DistilBERT (`distilbert-base-uncased`) |
-| Training Framework | TensorFlow / Keras |
-| Inference Framework | PyTorch (HF Spaces compatible) |
-| Sequence Model | Bidirectional GRU + Self-Attention |
-| Lexical Features | TF-IDF (scikit-learn) |
-| Sentence Tokenization | NLTK |
-| Web App | Gradio |
-| Deployment | HuggingFace Spaces |
-| Training Hardware | Google Colab T4 GPU |
+**Total params: 900,865 (3.44 MB)**
 
 ---
 
-## 🚀 How To Use
+## 📁 Project Structure
 
-### ▶️ Option 1 — Live App (No Setup)
-**[👉 Click here to use the app instantly](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel)**
+```
+GRUDeepLeraningmodel/
+├── app.py                      # Gradio UI + inference pipeline
+├── requirements.txt            # Dependencies
+├── README.md                   # This file
+├── summarizer_model.keras      # Trained BiGRU model (3.44 MB)
+├── summarizer_vectorizer.pkl   # Fitted TF-IDF vectorizer
+└── assets/
+    ├── model_architecture.png  # Screenshot of model summary
+    └── training_results.png    # Screenshot of training logs
+```
 
-### 📓 Option 2 — Run the Training Notebook
-**[👉 Open in Google Colab](https://colab.research.google.com/drive/1j7eD76UCqm51LafeweFfwSbL7SmHmb2T?usp=sharing)**
+---
 
-Steps inside the notebook:
-1. Mount Google Drive
-2. Install dependencies
-3. Load Whisper transcripts
-4. Generate pseudo-labels
-5. Build BERT + TF-IDF feature matrix
-6. Train BiGRU model
-7. Deploy Gradio app
-
-### 💻 Option 3 — Run Locally
+## 🚀 Run Locally
 
 ```bash
-git clone https://github.com/mudassar2224/BiGRU-DistilBERT-USing-deep-Learning-and-NLP
-cd BiGRU-DistilBERT-USing-deep-Learning-and-NLP
-pip install torch transformers nltk scikit-learn gradio numpy huggingface_hub
+git clone https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel
+cd GRUDeepLeraningmodel
+pip install -r requirements.txt
 python app.py
 ```
 
 ---
 
-## 📁 Repository Structure
+## 🧰 Tech Stack
 
-```
-├── GRU_MODEL_TRAINED_ON_PERSONAL_DATASET.ipynb  ← Full training notebook
-├── app.py                                        ← Gradio web app
-├── requirements.txt                              ← Dependencies
-└── README.md
-```
-
-> Model weights (`model_weights.npz`) and vectorizer
-> (`summarizer_vectorizer.pkl`) are hosted on HuggingFace
-> and downloaded automatically at runtime — no manual setup needed.
-
----
-
-## 💡 Key Challenges Solved
-
-**1. No labeled data** → Solved with TF-IDF pseudo-labeling. No human
-annotation needed — the model learns to replicate and improve TF-IDF scoring.
-
-**2. Unpunctuated transcripts** → YouTube auto-captions have no full stops.
-Fixed by forcing 35-word chunk splits when sentence count is too low.
-
-**3. Multilingual mixed text** → DistilBERT handles English tokens;
-TF-IDF handles Urdu/Punjabi lexical patterns. The fusion of both works
-better than either alone on code-switched text.
-
-**4. TF + PyTorch conflict on HF Spaces** → Solved by exporting Keras
-weights to NumPy and implementing the GRU forward pass in pure NumPy.
-Zero TensorFlow needed at inference time.
+| Component | Technology |
+|:---|:---|
+| Sentence Embeddings | `DistilBERT-base-uncased` |
+| Lexical Features | `TF-IDF (scikit-learn)` |
+| Sequence Model | `Bidirectional GRU + Attention` |
+| Framework | `Keras 3 · TensorFlow 2.15` |
+| UI | `Gradio 6.14` |
+| Hosting | `Hugging Face Spaces` |
+| Training | `Google Colab T4 GPU` |
 
 ---
 
-## 🔗 All Links
+## ✍️ Author
 
-| Resource | Link |
-|---|---|
-| 🤗 Live App | [HuggingFace Spaces](https://huggingface.co/spaces/Maliktg5/GRUDeepLeraningmodel) |
-| 📓 Training Notebook | [Google Colab](https://colab.research.google.com/drive/1j7eD76UCqm51LafeweFfwSbL7SmHmb2T?usp=sharing) |
-| 📂 Dataset | [Google Drive](https://drive.google.com/drive/folders/1z0RDMLAN-x9iaMUAE80eTrsCTEQXS9Ac?usp=sharing) |
-| 💻 GitHub | [This Repository](https://github.com/mudassar2224/BiGRU-DistilBERT-USing-deep-Learning-and-NLP) |
+**Malik Taimoor Ghazanfar**
+Built end-to-end: data collection → labeling → training → deployment
 
----
-
-## 👤 Author
-
-Built solo by **Malik Taimoor Ghazanfar**
-
-🤗 [HuggingFace Profile](https://huggingface.co/Maliktg5)  
-💼 [LinkedIn](YOUR_LINKEDIN_POST_URL)  
-💻 [GitHub](https://github.com/mudassar2224)
-
----
-
-⭐ **If this project helped you or you find it interesting, please give it a star!**
-```
-
----
-
-## Two Things To Do Now
-
-**1.** In the GitHub README, replace `YOUR_LINKEDIN_POST_URL` with your LinkedIn post URL after you post it.
-
-**2.** Add these 4 files to your GitHub repo before sharing:
-- `GRU_MODEL_TRAINED_ON_PERSONAL_DATASET.ipynb` ← you have this
-- `app.py` ← copy from your HF Space files tab
-- `requirements.txt` ← copy from your HF Space files tab
-- `README.md` ← paste the above
-
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat&logo=linkedin)](YOUR_LINKEDIN_URL)
+[![HuggingFace](https://img.shields.io/badge/🤗-Maliktg5-yellow)](https://huggingface.co/Maliktg5)
